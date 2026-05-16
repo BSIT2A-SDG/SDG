@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Conservation Journey — 15 Weeks</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html {
+            scroll-snap-type: y proximity;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Patrick Hand', sans-serif;
+            background: #0a0712;
+            color: #e2d1f9;
+            overflow-x: hidden;
+        }
+
+        /* ── ambient background blobs ── */
+        .bg-blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .blob-1 {
+            width: 500px; height: 500px;
+            background: rgba(124, 58, 237, 0.12);
+            top: -100px; left: -150px;
+            animation: blobDrift1 18s ease-in-out infinite alternate;
+        }
+        .blob-2 {
+            width: 400px; height: 400px;
+            background: rgba(168, 85, 247, 0.1);
+            bottom: -80px; right: -120px;
+            animation: blobDrift2 22s ease-in-out infinite alternate;
+        }
+        .blob-3 {
+            width: 300px; height: 300px;
+            background: rgba(192, 132, 252, 0.08);
+            top: 40%; left: 50%;
+            animation: blobDrift3 15s ease-in-out infinite alternate;
+        }
+        @keyframes blobDrift1 {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(80px, 60px) scale(1.15); }
+        }
+        @keyframes blobDrift2 {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(-60px, -80px) scale(1.2); }
+        }
+        @keyframes blobDrift3 {
+            0% { transform: translate(-50%, 0) scale(1); }
+            100% { transform: translate(-50%, -50px) scale(1.1); }
+        }
+
+        /* ── floating particles ── */
+        #particles { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0;
+            animation: floatUp linear infinite;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0) translateX(0) scale(0); opacity: 0; }
+            8% { opacity: var(--p-opacity, 0.5); transform: translateY(-8vh) translateX(5px) scale(1); }
+            85% { opacity: calc(var(--p-opacity, 0.5) * 0.6); }
+            100% { transform: translateY(-105vh) translateX(var(--p-drift, -15px)) scale(0.4); opacity: 0; }
+        }
+
+        /* ── hero ── */
+        .hero {
+            min-height: 100vh;
+            scroll-snap-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            padding: 2rem;
+        }
+        .hero-title {
+            font-size: clamp(2.4rem, 7.5vw, 4.8rem);
+            font-weight: 400;
+            background: linear-gradient(135deg, #c084fc, #a855f7, #7c3aed, #e9d5ff, #a855f7);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 5s ease infinite;
+            line-height: 1.3;
+        }
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        .hero-sub {
+            font-size: clamp(1.1rem, 2.8vw, 1.45rem);
+            color: #c4b5fd;
+            margin-top: 0.75rem;
+        }
+        .hero-deco {
+            color: #a855f7;
+            font-size: 1.5rem;
+            margin-top: 1.5rem;
+            letter-spacing: 0.5em;
+            opacity: 0.6;
+        }
+        .scroll-cue {
+            position: absolute;
+            bottom: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            color: #a78bfa;
+            font-size: 0.95rem;
+            animation: cueBounce 2.2s ease-in-out infinite;
+        }
+        .scroll-cue span {
+            display: block;
+            width: 18px; height: 28px;
+            border: 2px solid rgba(167, 139, 250, 0.5);
+            border-radius: 9px;
+            position: relative;
+        }
+        .scroll-cue span::after {
+            content: '';
+            position: absolute;
+            width: 3px; height: 7px;
+            background: #a78bfa;
+            border-radius: 2px;
+            top: 5px; left: 50%;
+            transform: translateX(-50%);
+            animation: cueDot 2.2s ease-in-out infinite;
+        }
+        @keyframes cueBounce {
+            0%, 100% { transform: translateY(0); opacity: 0.7; }
+            50% { transform: translateY(8px); opacity: 1; }
+        }
+        @keyframes cueDot {
+            0% { top: 5px; opacity: 1; }
+            100% { top: 16px; opacity: 0; }
+        }
+
+        /* ── week sections ── */
+        .week-section {
+            min-height: 100vh;
+            scroll-snap-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem 1rem;
+            position: relative;
+            z-index: 2;
+            transition: all 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0.25;
+            transform: scale(0.93);
+            filter: blur(2px);
+        }
+        .week-section.active {
+            opacity: 1;
+            transform: scale(1);
+            filter: blur(0);
+        }
+        .week-section.near {
+            opacity: 0.5;
+            transform: scale(0.96);
+            filter: blur(1px);
+        }
+        /* last week — shorter so footer is reachable */
+        .week-section.last-week {
+            min-height: auto;
+            padding: 2.5rem 1rem;
+            scroll-snap-align: start;
+        }
+
+        .week-card {
+            background: rgba(88, 28, 135, 0.1);
+            border: 1px solid rgba(168, 85, 247, 0.15);
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            max-width: 620px;
+            width: 100%;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: all 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .week-section.active .week-card {
+            border-color: rgba(168, 85, 247, 0.45);
+            box-shadow: 0 0 50px rgba(168, 85, 247, 0.12), 0 0 100px rgba(139, 92, 246, 0.06);
+        }
+        .week-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2.5px;
+            background: linear-gradient(90deg, transparent, #c084fc, #a855f7, #c084fc, transparent);
+            opacity: 0;
+            transition: opacity 0.55s;
+        }
+        .week-section.active .week-card::before { opacity: 1; }
+
+        .week-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.35), rgba(168, 85, 247, 0.25));
+            color: #e9d5ff;
+            padding: 0.2rem 0.7rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            letter-spacing: 0.04em;
+            border: 1px solid rgba(192, 132, 252, 0.2);
+        }
+        .week-title {
+            font-size: 1.45rem;
+            color: #f3e8ff;
+            margin: 0.6rem 0 0.5rem;
+            line-height: 1.3;
+        }
+        .week-desc {
+            font-size: 1.05rem;
+            color: #c4b5fd;
+            line-height: 1.55;
+        }
+
+        /* ── photo grid ── */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.45rem;
+            margin: 0.75rem 0;
+        }
+        .photo-grid.cols-3 {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+        .photo-grid img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 0.6rem;
+            transition: transform 0.35s, filter 0.35s, box-shadow 0.35s;
+            filter: brightness(0.65) saturate(0.7);
+        }
+        .week-section.active .photo-grid img {
+            filter: brightness(0.95) saturate(1);
+        }
+        .week-section.active .photo-grid img:hover {
+            transform: scale(1.04);
+            filter: brightness(1.1) saturate(1.1);
+            box-shadow: 0 4px 20px rgba(168, 85, 247, 0.25);
+        }
+
+        /* ── week 15 extras ── */
+        .reflection-box {
+            background: rgba(124, 58, 237, 0.12);
+            border-left: 3px solid #a855f7;
+            border-radius: 0 0.6rem 0.6rem 0;
+            padding: 0.75rem 1rem;
+            margin-top: 0.6rem;
+        }
+        .reflection-label {
+            font-size: 0.9rem;
+            color: #c084fc;
+            margin-bottom: 0.3rem;
+        }
+        .reflection-text {
+            font-size: 1rem;
+            color: #d8b4fe;
+            line-height: 1.6;
+        }
+        .commitment-box {
+            margin-top: 0.6rem;
+        }
+        .commitment-label {
+            font-size: 0.9rem;
+            color: #c084fc;
+            margin-bottom: 0.35rem;
+        }
+        .commitment-list {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.2rem 0.75rem;
+        }
+        .commitment-list li {
+            font-size: 0.92rem;
+            color: #d8b4fe;
+            padding: 0.2rem 0 0.2rem 1.3rem;
+            position: relative;
+            line-height: 1.45;
+        }
+        .commitment-list li::before {
+            content: '✿';
+            position: absolute;
+            left: 0;
+            color: #c084fc;
+            font-size: 0.7rem;
+            top: 0.3rem;
+        }
+
+        /* ── side navigation dots ── */
+        .week-nav {
+            position: fixed;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            z-index: 100;
+        }
+        .week-nav-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: rgba(168, 85, 247, 0.2);
+            transition: all 0.35s;
+            cursor: pointer;
+            border: none;
+            padding: 0;
+        }
+        .week-nav-dot:hover {
+            background: rgba(168, 85, 247, 0.5);
+        }
+        .week-nav-dot.active {
+            background: #c084fc;
+            box-shadow: 0 0 8px rgba(192, 132, 252, 0.6);
+            transform: scale(1.6);
+        }
+
+        /* ── footer — fully visible ── */
+        .site-footer {
+            position: relative;
+            z-index: 2;
+            background: rgba(88, 28, 135, 0.08);
+            border-top: 1px solid rgba(168, 85, 247, 0.2);
+            padding: 3rem 1.5rem 2rem;
+            text-align: center;
+            min-height: 12vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+        }
+        .footer-deco {
+            color: #a855f7;
+            font-size: 1.2rem;
+            letter-spacing: 0.6em;
+            opacity: 0.4;
+        }
+        .footer-name {
+            font-size: 1.1rem;
+            color: #d8b4fe;
+            line-height: 1.4;
+        }
+        .footer-copy {
+            font-size: 0.85rem;
+            color: rgba(167, 139, 250, 0.45);
+            margin-top: 0.2rem;
+        }
+        .footer-thanks {
+            font-size: 0.9rem;
+            color: rgba(192, 132, 252, 0.35);
+            margin-top: 0.5rem;
+        }
+
+        /* ── responsive ── */
+        @media (max-width: 640px) {
+            .week-card { padding: 1.15rem; }
+            .photo-grid img { height: 85px; }
+            .week-nav { right: 0.4rem; gap: 0.3rem; }
+            .week-nav-dot { width: 5px; height: 5px; }
+            .commitment-list { grid-template-columns: 1fr; }
+            .week-title { font-size: 1.25rem; }
+            .site-footer { padding: 2.5rem 1rem 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ambient blobs -->
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+    <div class="bg-blob blob-3"></div>
+
+    <!-- floating particles -->
+    <div id="particles"></div>
+
+    <!-- side nav dots -->
+    <nav class="week-nav" id="weekNav" aria-label="Week navigation"></nav>
+
+    <main>
+        <!-- ═══════ HERO ═══════ -->
+        <section class="hero" id="heroSection">
+            <div class="hero-title">My Conservation Journey</div>
+            <p class="hero-sub">15 weeks of small acts for a bigger purpose ✿</p>
+            <div class="hero-deco">♡ ✿ ♡ ✿ ♡</div>
+            <div class="scroll-cue">
+                <span></span>
+                scroll down
+            </div>
+        </section>
+
+        <!-- ═══════ WEEKS CONTAINER ═══════ -->
+        <div id="weeksContainer"></div>
+
+        <!-- ═══════ FOOTER ═══════ -->
+        <footer class="site-footer">
+            <div class="footer-deco">✿ ✿ ✿</div>
+            <p class="footer-name">✿ Rai Anjela N. Mangao — BSIT 2A ✿</p>
+            <p class="footer-copy">© 2026 Rai Anjela N. Mangao. All Rights Reserved.</p>
+            <p class="footer-thanks">made with love for the earth ♡</p>
+        </footer>
+    </main>
+
+<script>
+// ──────────────────────────────────────────
+//  WEEKS DATA — edit your content here!
+// ──────────────────────────────────────────
+const weeks = [
+    {
+        week: 1,
+        title: "Riding Pedicab Instead of Tricycle",
+        desc: "I rode a pedicab instead of a tricycle to reduce air pollution. Pedicabs do not use fuel, so they are more environmentally friendly. This supports SDG 13 Climate Action and SDG 11 Sustainable Cities and Communities.",
+        photos: ["Mangao/week 1/IMG_20260214_095939_052.webp", "Mangao/week 1/IMG_20260214_100000_557.webp", "Mangao/week 1/IMG_20260215_165310_633.webp"]
+
+    },
+    {
+        week: 2,
+        title: "Using a Box Instead of Plastic Bags",
+        desc: "I used a box instead of plastic bags during grocery shopping to reduce plastic waste. This helps the environment and supports SDG 12 Responsible Consumption and Production and SDG 14 Life Below Water.",
+        photos: ["Mangao/week 2/IMG_20260401_172751_628.webp", "Mangao/week 2/IMG_20260401_173131_786.webp"]
+    },
+    {
+        week: 3,
+        title: "Handwashing Clothes and Using Natural Resources",
+        desc: "I handwashed my clothes, used a poso instead of tap water, and dried them under the sun to save water and electricity. This supports SDG 6 Clean Water and Sanitation and SDG 7 Affordable and Clean Energy. ",
+        photos: ["IMG_20260308_074636_490.webp", "IMG_20260424_152923_1.jpg", "IMG_20260424_152936.jpg", "IMG_20260424_153001.jpg"]
+    },
+    {
+        week: 4,
+        title: "Joining Tech2Thrive Mentorship Program",
+        desc: "I joined the Tech2Thrive mentorship program by Fundlife to improve my skills and knowledge. This suppports SDG 4 Quality Education and SDG 8 Decent Work and Economic Growth.",
+        photos: ["Mangao/week 4/Messenger_creation_3F0344CF-04BB-435A-9F15-BD2EF508892C.jpeg", "Mangao/week 4/Messenger_creation_67A12E86-F0FD-4973-BE7C-CBCE54B751B5.jpeg", "Mangao/week 4/Messenger_creation_76D7C6C6-873F-4FEF-8033-F4ABDC9AACF2.jpeg", "Mangao/week 4/Messenger_creation_E9EFAA5C-00BF-41B1-A64C-E0311EBB778F.jpeg"]
+    },
+    {
+        week: 5,
+        title: "Reusing Materials for Flaglets",
+        desc: "I made a purple flaglet using recycled mmaterials instead of buying new ones. This helped reduce waste and save money. This supports SDG 12 REsponsible Consumption and Production and SDG 5 Gender Equality.",
+        photos: ["Mangao/week 5/IMG_20260308_073500_655.webp", "Mangao/week 5/IMG_20260308_073703_589.webp", "Mangao/week 5/IMG_20260308_073047_061.webp"]
+    },
+    {
+        week: 6,
+        title: "Walking Instead of Using Motorized Transport",
+        desc: "We walked  to our groupmate's house instead of riding a vehicle to save fuel and reduce pollution. this supports SDG 13 Climate Action and SDG 11 Sustainable Cities and Communities.",
+        photos: ["Mangao/week 6/Screenshot 2026-05-16 135441.png", "Mangao/week 6/Screenshot 2026-05-16 135638.png", "Mangao/week 6/Screenshot 2026-05-16 135716.png"]
+    },
+    {
+        week: 7,
+        title: "Joining a Fun Run for Women's Month",
+        desc: "I joined a fun run by FundLife for Women's Month. This promotes health and support women's empowerment. This supports SDG 3 Good Health and Well-being and SDG 5 Gender Equality",
+        photos: ["Mangao/week 7/Messenger_creation_899597616402338.jpeg", "Mangao/week 7/received_1279067214370674.jpeg", "Mangao/week 7/received_1514073213481452.jpeg", "Mangao/week 7/received_2013602672926332.jpeg"]
+    },
+    {
+        week: 8,
+        title: "Participating in Women's Month Culminating Program",
+        desc: "I attended a Women's Month program and joined a spoken poetry competition to support awareness and empowerment. This supports SDG 5 Gender Equality and SDG 4 Quality Education.",
+        photos: ["Mangao/week 8/received_877478395330073.jpeg", "Mangao/week 8/received_916630481241727.jpeg", "Mangao/week 8/received_931796149645886.jpeg"]
+    },
+    {
+        week: 9,
+        title: "Recycled Art Mask",
+        desc: "I created and presented a mask using recycled materials like newspapers and used papers. This helps reduce waste and promotes creativity. This supports SDG 12 Responsible Consumption and Production and SDG 4 Quality Education.",
+        photos: ["Mangao/week 9/Messenger_creation_5EE5F18F-6F4B-46D2-B1F6-C66FACEA12A3.jpeg", "Mangao/week 9/Messenger_creation_A00FDE52-A9CF-4F6C-9230-1EC7F86FAD13.jpeg", "Mangao/week 9/Messenger_creation_D0D30E1B-5964-4751-9BC1-27EBFAE25BAC.jpeg"]
+    },
+    {
+        week: 10,
+        title: "Morning Jog",
+        desc: "I did a morning jog to stay healthy without using fuel or electricity. This supports SDG 3 Good Health and Well-being and SDG 13 Climate Action.",
+        photos: ["Mangao/week 10/1777017985480.webp", "Mangao/week 10/IMG_20260405_065837_498.webp", "Mangao/week 10/IMG_20260405_065912_020.webp", "Mangao/week 10/IMG_20260405_065939_797.webp"]
+    },
+    {
+        week: 11,
+        title: "Reusing Old Clothes into a Rug",
+        desc: "I reused old clothes to make a rug instead of throwing them away. This supports SDG 12 REsponsible Comsumption and Production.",
+        photos: ["Mangao/week 11/Screenshot 2026-05-16 143308.png", "Mangao/week 11/Screenshot 2026-05-16 143332.png"]
+    },
+    {
+        week: 12,
+        title: "Planting Vegetables at Home",
+        desc: "We planted kangkong, talbos ng kamote, and tomatoes at home to reduce buying from the market. This supports SDG 2 Zero Hunger and SDG 13 Climate Action.",
+        photos: ["Mangao/week 12/IMG_20260419_081343_1.jpg", "Mangao/week 12/IMG_20260419_081350_1.jpg", "Mangao/week 12/IMG_20260424_132518.jpg"]
+    },
+    {
+        week: 13,
+        title: "Using Recycled Boxes for SDG Project",
+        desc: "We used recycled boxes for our project instead of buying new ones, helping waste and reuse materials. This supports SDG 12 and SDG 13.",
+        photos: ["Mangao/week 13/received_1514683050178891.jpeg", "Mangao/week 13/received_1550029476909906.jpeg", "Mangao/week 13/received_2704637939937014.jpeg", "Mangao/week 13/Messenger_creation_1404267244838504.jpeg"]
+    },
+    {
+        week: 14,
+        title: "Reusing Containers and Jars at Home",
+        desc: "We reused platic containers and glass jars at home for storage instead of throwing them away. This supports SDG 12 Responsible Comsumption and Production.",
+        photos: ["Mangao/week 14/IMG_20260425_173249_1.jpg", "Mangao/week 14/IMG_20260425_174125.jpg"]
+    },
+    {
+        week: 15,
+        title: "Refeletion and Habit Commitment",
+        desc: "I reflected on my conservation efforts and committed to continuing simple habits like reusing materials, planting, and saving resources. This shows that small actions can become a sustainable lifestyle.",
+        photos: ["Mangao/week 15/IMG_20260501_090001.jpg", "Mangao/week 15/IMG_20260501_090013.jpg", "Mangao/week 15/IMG_20260501_090155.jpg", "Mangao/week 15/cce4bedc-5509-4596-9b79-ed1d2edcb0b1.jpg"],
+        reflection: "Over the past 15 weeks, I learned that conservation does not always recquire big actions, but can start from simple daily habits. At first, these efforts felt like small tasks, but over time, I realized their impact on reducing waste, saving resources, and helping the environment. This experience helped me become more responsible and ware of my actions. As I continue these practices and expand my planting efforts using available materials at home, I realized that small steps can grow into bigger contributions. Moving forward, I will continue practicing these habits and encourage others to do the same, because even small actions can lead to meaningful change.s",
+        commitments: [
+            "Handwashing clothes and using natural drying methods",
+            "Regular jogging/walking instead of relying on transport",
+            "Reusing old clothes into useful items",
+            "Planting and regrowing vegetables at home",
+            "Expanding planting using vegetable scraps",
+            "Reusing containers and jars for storage"
+        ]
+    }
+];
+
+// ──────────────────────────────────────────
+//  RENDER WEEK SECTIONS
+// ──────────────────────────────────────────
+const container = document.getElementById('weeksContainer');
+
+weeks.forEach((w, i) => {
+    const section = document.createElement('section');
+    const isLast = w.week === 15;
+    section.className = 'week-section' + (isLast ? ' last-week' : '');
+    section.id = `week-${w.week}`;
+    section.setAttribute('data-week', w.week);
+
+    const photoClass = isLast ? 'photo-grid cols-3' : 'photo-grid';
+
+    let photosHTML = w.photos.map(photo =>
+    `<img src="${photo}" alt="Week ${w.week} documentation" loading="lazy">`
+    ).join('');
+
+    let extrasHTML = '';
+    if (w.reflection) {
+        extrasHTML += `
+            <div class="reflection-box">
+                <div class="reflection-label">✿ My Reflection</div>
+                <p class="reflection-text">${w.reflection}</p>
+            </div>`;
+    }
+    if (w.commitments) {
+        const items = w.commitments.map(c => `<li>${c}</li>`).join('');
+        extrasHTML += `
+            <div class="commitment-box">
+                <div class="commitment-label">♡ Habit Commitments</div>
+                <ul class="commitment-list">${items}</ul>
+            </div>`;
+    }
+
+    section.innerHTML = `
+        <div class="week-card">
+            <div class="week-badge">✿ week ${w.week}</div>
+            <h2 class="week-title">${w.title}</h2>
+            <div class="${photoClass}">${photosHTML}</div>
+            <p class="week-desc">${w.desc}</p>
+            ${extrasHTML}
+        </div>
+    `;
+
+    container.appendChild(section);
+});
+
+// ──────────────────────────────────────────
+//  SIDE NAVIGATION DOTS
+// ──────────────────────────────────────────
+const nav = document.getElementById('weekNav');
+const allSections = [document.getElementById('heroSection'), ...document.querySelectorAll('.week-section')];
+
+allSections.forEach((sec, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'week-nav-dot';
+    dot.setAttribute('aria-label', i === 0 ? 'Hero' : `Week ${i}`);
+    dot.addEventListener('click', () => sec.scrollIntoView({ behavior: 'smooth' }));
+    nav.appendChild(dot);
+});
+
+const dots = nav.querySelectorAll('.week-nav-dot');
+
+// ──────────────────────────────────────────
+//  SCROLL EMPHASIS LOGIC
+// ──────────────────────────────────────────
+const weekSections = document.querySelectorAll('.week-section');
+
+function updateEmphasis() {
+    const vpCenter = window.innerHeight / 2;
+    let activeIdx = -1;
+    let minDist = Infinity;
+
+    allSections.forEach((sec, i) => {
+        const rect = sec.getBoundingClientRect();
+        const center = rect.top + rect.height / 2;
+        const dist = Math.abs(center - vpCenter);
+        if (dist < minDist) {
+            minDist = dist;
+            activeIdx = i;
+        }
+    });
+
+    dots.forEach((d, i) => d.classList.toggle('active', i === activeIdx));
+
+    weekSections.forEach(sec => {
+        const rect = sec.getBoundingClientRect();
+        const center = rect.top + rect.height / 2;
+        const dist = Math.abs(center - vpCenter);
+        const threshold = window.innerHeight * 0.4;
+
+        sec.classList.remove('active', 'near');
+        if (dist < threshold * 0.5) {
+            sec.classList.add('active');
+        } else if (dist < threshold) {
+            sec.classList.add('near');
+        }
+    });
+}
+
+window.addEventListener('scroll', updateEmphasis, { passive: true });
+window.addEventListener('resize', updateEmphasis);
+updateEmphasis();
+
+// ──────────────────────────────────────────
+//  FLOATING PARTICLES
+// ──────────────────────────────────────────
+const particleContainer = document.getElementById('particles');
+const particleColors = [
+    'rgba(192, 132, 252, 0.6)',
+    'rgba(168, 85, 247, 0.5)',
+    'rgba(139, 92, 246, 0.45)',
+    'rgba(216, 180, 254, 0.5)',
+    'rgba(232, 200, 255, 0.4)',
+    'rgba(167, 139, 250, 0.5)',
+];
+
+function createParticle() {
+    const p = document.createElement('div');
+    p.className = 'particle';
+
+    const size = Math.random() * 5 + 2;
+    const left = Math.random() * 100;
+    const dur = Math.random() * 14 + 10;
+    const delay = Math.random() * 8;
+    const color = particleColors[Math.floor(Math.random() * particleColors.length)];
+    const drift = (Math.random() - 0.5) * 60;
+    const opacity = Math.random() * 0.3 + 0.25;
+
+    p.style.cssText = `
+        width: ${size}px;
+        height: ${size}px;
+        left: ${left}%;
+        bottom: -10px;
+        background: ${color};
+        box-shadow: 0 0 ${size * 2}px ${color};
+        animation-duration: ${dur}s;
+        animation-delay: ${delay}s;
+        --p-drift: ${drift}px;
+        --p-opacity: ${opacity};
+    `;
+
+    particleContainer.appendChild(p);
+}
+
+for (let i = 0; i < 30; i++) createParticle();
+</script>
+</body>
+</html>
