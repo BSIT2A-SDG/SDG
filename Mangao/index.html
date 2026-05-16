@@ -179,7 +179,6 @@
             transform: scale(0.96);
             filter: blur(1px);
         }
-        /* last week — shorter so footer is reachable */
         .week-section.last-week {
             min-height: auto;
             padding: 2.5rem 1rem;
@@ -227,10 +226,13 @@
             border: 1px solid rgba(192, 132, 252, 0.2);
         }
         .week-title {
-            font-size: 1.45rem;
-            color: #f3e8ff;
-            margin: 0.6rem 0 0.5rem;
+            /* UPDATED: Emphasis on Title (White + Glow) */
+            font-size: 1.8rem;
+            color: #ffffff;
+            margin: 0.8rem 0 0.6rem;
             line-height: 1.3;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            letter-spacing: 0.5px;
         }
         .week-desc {
             font-size: 1.05rem;
@@ -256,7 +258,7 @@
             transition: transform 0.35s, filter 0.35s, box-shadow 0.35s;
             filter: brightness(0.65) saturate(0.7);
             background-color: rgba(255,255,255,0.05);
-            cursor: pointer; /* Hand cursor */
+            cursor: pointer;
         }
         .week-section.active .photo-grid img {
             filter: brightness(0.95) saturate(1);
@@ -308,7 +310,7 @@
             line-height: 1.45;
         }
         .commitment-list li::before {
-            content: '✿';
+            content: '♡'; /* Simple Heart */
             position: absolute;
             left: 0;
             color: #c084fc;
@@ -385,14 +387,14 @@
 
         /* ── LIGHTBOX / MODAL STYLES ── */
         .modal {
-            display: none; /* Hidden by default */
+            display: none;
             position: fixed;
-            z-index: 2000; /* On top of everything */
+            z-index: 2000;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(10, 7, 18, 0.95); /* Dark background */
+            background-color: rgba(10, 7, 18, 0.95);
             backdrop-filter: blur(8px);
             align-items: center;
             justify-content: center;
@@ -476,8 +478,8 @@
         <!-- ═══════ HERO ═══════ -->
         <section class="hero" id="heroSection">
             <div class="hero-title">My Conservation Journey</div>
-            <p class="hero-sub">15 weeks of small acts for a bigger purpose ✿</p>
-            <div class="hero-deco">♡ ✿ ♡ ✿ ♡</div>
+            <p class="hero-sub">15 weeks of small acts for a bigger purpose ♡</p>
+            <div class="hero-deco">♡ ♡ ♡ ♡ ♡</div>
             <div class="scroll-cue">
                 <span></span>
                 scroll down
@@ -489,8 +491,8 @@
 
         <!-- ═══════ FOOTER ═══════ -->
         <footer class="site-footer">
-            <div class="footer-deco">✿ ✿ ✿</div>
-            <p class="footer-name">✿ Rai Anjela N. Mangao — BSIT 2A ✿</p>
+            <div class="footer-deco">♡ ♡ ♡</div>
+            <p class="footer-name">♡ Rai Anjela N. Mangao — BSIT 2A ♡</p>
             <p class="footer-copy">© 2026 Rai Anjela N. Mangao. All Rights Reserved.</p>
             <p class="footer-thanks">made with love for the earth ♡</p>
         </footer>
@@ -505,7 +507,7 @@
 
 <script>
 // ──────────────────────────────────────────
-//  WEEKS DATA (PATHS CORRECTED)
+//  WEEKS DATA (CORRECTED PATHS)
 // ──────────────────────────────────────────
 const weeks = [
     {
@@ -695,7 +697,7 @@ weeks.forEach((w, i) => {
     if (w.reflection) {
         extrasHTML += `
             <div class="reflection-box">
-                <div class="reflection-label">✿ My Reflection</div>
+                <div class="reflection-label">♡ My Reflection</div>
                 <p class="reflection-text">${w.reflection}</p>
             </div>`;
     }
@@ -708,10 +710,11 @@ weeks.forEach((w, i) => {
             </div>`;
     }
 
+    // UPDATED: Added 🌷 (Purple Tulip) before the title
     section.innerHTML = `
         <div class="week-card">
-            <div class="week-badge">✿ week ${w.week}</div>
-            <h2 class="week-title">${w.title}</h2>
+            <div class="week-badge">♡ week ${w.week}</div>
+            <h2 class="week-title">🌷 ${w.title}</h2>
             <div class="${photoClass}">${photosHTML}</div>
             <p class="week-desc">${w.desc}</p>
             ${extrasHTML}
@@ -835,8 +838,6 @@ document.querySelectorAll('.photo-grid img').forEach(img => {
         modal.classList.add('show');
         modalImg.src = this.src;
         
-        // Get the week number from the alt text for a caption
-        // Alt text format: "Week X documentation"
         captionText.innerHTML = this.alt.replace(" documentation", "");
         document.body.style.overflow = "hidden"; // Stop background scrolling
     });
