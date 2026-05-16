@@ -255,7 +255,8 @@
             border-radius: 0.6rem;
             transition: transform 0.35s, filter 0.35s, box-shadow 0.35s;
             filter: brightness(0.65) saturate(0.7);
-            background-color: rgba(255,255,255,0.05); /* Placeholder bg while loading */
+            background-color: rgba(255,255,255,0.05);
+            cursor: pointer; /* Hand cursor */
         }
         .week-section.active .photo-grid img {
             filter: brightness(0.95) saturate(1);
@@ -345,7 +346,7 @@
             transform: scale(1.6);
         }
 
-        /* ── footer — fully visible ── */
+        /* ── footer ── */
         .site-footer {
             position: relative;
             z-index: 2;
@@ -380,6 +381,70 @@
             font-size: 0.9rem;
             color: rgba(192, 132, 252, 0.35);
             margin-top: 0.5rem;
+        }
+
+        /* ── LIGHTBOX / MODAL STYLES ── */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 2000; /* On top of everything */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(10, 7, 18, 0.95); /* Dark background */
+            backdrop-filter: blur(8px);
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            cursor: zoom-out;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 85vh;
+            border-radius: 8px;
+            box-shadow: 0 0 50px rgba(168, 85, 247, 0.5);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            object-fit: contain;
+        }
+
+        .modal.show .modal-content {
+            transform: scale(1);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: #e9d5ff;
+            font-size: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s;
+            line-height: 1;
+            z-index: 2001;
+            text-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        .close-modal:hover {
+            color: #c084fc;
+        }
+
+        .modal-caption {
+            margin-top: 15px;
+            color: #e9d5ff;
+            font-size: 1.2rem;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
         }
 
         /* ── responsive ── */
@@ -431,16 +496,22 @@
         </footer>
     </main>
 
+    <!-- ═══════ IMAGE MODAL ═══════ -->
+    <div id="imgModal" class="modal">
+        <span class="close-modal">&times;</span>
+        <img class="modal-content" id="modalImg">
+        <div id="caption" class="modal-caption"></div>
+    </div>
+
 <script>
 // ──────────────────────────────────────────
-//  WEEKS DATA — PATHS CORRECTED
+//  WEEKS DATA (PATHS CORRECTED)
 // ──────────────────────────────────────────
 const weeks = [
     {
         week: 1,
         title: "Riding Pedicab Instead of Tricycle",
         desc: "I rode a pedicab instead of a tricycle to reduce air pollution. Pedicabs do not use fuel, so they are more environmentally friendly. This supports SDG 13 Climate Action and SDG 11 Sustainable Cities and Communities.",
-        // CORRECTED PATH: "week 1/filename"
         photos: [
             "week 1/IMG_20260214_095939_052.webp", 
             "week 1/IMG_20260214_100000_557.webp", 
@@ -451,7 +522,6 @@ const weeks = [
         week: 2,
         title: "Using a Box Instead of Plastic Bags",
         desc: "I used a box instead of plastic bags during grocery shopping to reduce plastic waste. This helps the environment and supports SDG 12 Responsible Consumption and Production and SDG 14 Life Below Water.",
-        // CORRECTED PATH: "week 2/filename"
         photos: [
             "week 2/IMG_20260401_172751_628.webp", 
             "week 2/IMG_20260401_173131_786.webp"
@@ -461,7 +531,6 @@ const weeks = [
         week: 3,
         title: "Handwashing Clothes and Using Natural Resources",
         desc: "I handwashed my clothes, used a poso instead of tap water, and dried them under the sun to save water and electricity. This supports SDG 6 Clean Water and Sanitation and SDG 7 Affordable and Clean Energy. ",
-        // CORRECTED PATH: "week 3/filename"
         photos: [
             "week 3/IMG_20260308_074636_490.webp", 
             "week 3/IMG_20260424_152923_1.jpg", 
@@ -473,7 +542,6 @@ const weeks = [
         week: 4,
         title: "Joining Tech2Thrive Mentorship Program",
         desc: "I joined the Tech2Thrive mentorship program by Fundlife to improve my skills and knowledge. This suppports SDG 4 Quality Education and SDG 8 Decent Work and Economic Growth.",
-        // CORRECTED PATH: "week 4/filename"
         photos: [
             "week 4/Messenger_creation_3F0344CF-04BB-435A-9F15-BD2EF508892C.jpeg", 
             "week 4/Messenger_creation_67A12E86-F0FD-4973-BE7C-CBCE54B751B5.jpeg", 
@@ -485,7 +553,6 @@ const weeks = [
         week: 5,
         title: "Reusing Materials for Flaglets",
         desc: "I made a purple flaglet using recycled mmaterials instead of buying new ones. This helped reduce waste and save money. This supports SDG 12 REsponsible Consumption and Production and SDG 5 Gender Equality.",
-        // CORRECTED PATH: "week 5/filename"
         photos: [
             "week 5/IMG_20260308_073500_655.webp", 
             "week 5/IMG_20260308_073703_589.webp", 
@@ -496,7 +563,6 @@ const weeks = [
         week: 6,
         title: "Walking Instead of Using Motorized Transport",
         desc: "We walked  to our groupmate's house instead of riding a vehicle to save fuel and reduce pollution. this supports SDG 13 Climate Action and SDG 11 Sustainable Cities and Communities.",
-        // CORRECTED PATH: "week 6/filename"
         photos: [
             "week 6/Screenshot 2026-05-16 135441.png", 
             "week 6/Screenshot 2026-05-16 135638.png", 
@@ -507,7 +573,6 @@ const weeks = [
         week: 7,
         title: "Joining a Fun Run for Women's Month",
         desc: "I joined a fun run by FundLife for Women's Month. This promotes health and support women's empowerment. This supports SDG 3 Good Health and Well-being and SDG 5 Gender Equality",
-        // CORRECTED PATH: "week 7/filename"
         photos: [
             "week 7/Messenger_creation_899597616402338.jpeg", 
             "week 7/received_1279067214370674.jpeg", 
@@ -519,8 +584,8 @@ const weeks = [
         week: 8,
         title: "Participating in Women's Month Culminating Program",
         desc: "I attended a Women's Month program and joined a spoken poetry competition to support awareness and empowerment. This supports SDG 5 Gender Equality and SDG 4 Quality Education.",
-        // CORRECTED PATH: "week 8/filename"
         photos: [
+            "week 8/Screenshot 2026-05-16 180834.png",
             "week 8/received_877478395330073.jpeg", 
             "week 8/received_916630481241727.jpeg", 
             "week 8/received_931796149645886.jpeg"
@@ -530,8 +595,8 @@ const weeks = [
         week: 9,
         title: "Recycled Art Mask",
         desc: "I created and presented a mask using recycled materials like newspapers and used papers. This helps reduce waste and promotes creativity. This supports SDG 12 Responsible Consumption and Production and SDG 4 Quality Education.",
-        // CORRECTED PATH: "week 9/filename"
         photos: [
+            "week 9/d3c48747-53e7-465c-9c09-4dd6d4e28efc.jpg",
             "week 9/Messenger_creation_5EE5F18F-6F4B-46D2-B1F6-C66FACEA12A3.jpeg", 
             "week 9/Messenger_creation_A00FDE52-A9CF-4F6C-9230-1EC7F86FAD13.jpeg", 
             "week 9/Messenger_creation_D0D30E1B-5964-4751-9BC1-27EBFAE25BAC.jpeg"
@@ -541,7 +606,6 @@ const weeks = [
         week: 10,
         title: "Morning Jog",
         desc: "I did a morning jog to stay healthy without using fuel or electricity. This supports SDG 3 Good Health and Well-being and SDG 13 Climate Action.",
-        // CORRECTED PATH: "week 10/filename"
         photos: [
             "week 10/1777017985480.webp", 
             "week 10/IMG_20260405_065837_498.webp", 
@@ -553,7 +617,6 @@ const weeks = [
         week: 11,
         title: "Reusing Old Clothes into a Rug",
         desc: "I reused old clothes to make a rug instead of throwing them away. This supports SDG 12 REsponsible Comsumption and Production.",
-        // CORRECTED PATH: "week 11/filename"
         photos: [
             "week 11/Screenshot 2026-05-16 143308.png", 
             "week 11/Screenshot 2026-05-16 143332.png"
@@ -563,7 +626,6 @@ const weeks = [
         week: 12,
         title: "Planting Vegetables at Home",
         desc: "We planted kangkong, talbos ng kamote, and tomatoes at home to reduce buying from the market. This supports SDG 2 Zero Hunger and SDG 13 Climate Action.",
-        // CORRECTED PATH: "week 12/filename"
         photos: [
             "week 12/IMG_20260419_081343_1.jpg", 
             "week 12/IMG_20260419_081350_1.jpg", 
@@ -574,7 +636,6 @@ const weeks = [
         week: 13,
         title: "Using Recycled Boxes for SDG Project",
         desc: "We used recycled boxes for our project instead of buying new ones, helping waste and reuse materials. This supports SDG 12 and SDG 13.",
-        // CORRECTED PATH: "week 13/filename"
         photos: [
             "week 13/received_1514683050178891.jpeg", 
             "week 13/received_1550029476909906.jpeg", 
@@ -586,7 +647,6 @@ const weeks = [
         week: 14,
         title: "Reusing Containers and Jars at Home",
         desc: "We reused platic containers and glass jars at home for storage instead of throwing them away. This supports SDG 12 Responsible Comsumption and Production.",
-        // CORRECTED PATH: "week 14/filename"
         photos: [
             "week 14/IMG_20260425_173249_1.jpg", 
             "week 14/IMG_20260425_174125.jpg"
@@ -596,9 +656,7 @@ const weeks = [
         week: 15,
         title: "Reflection and Habit Commitment",
         desc: "I reflected on my conservation efforts and committed to continuing simple habits like reusing materials, planting, and saving resources. This shows that small actions can become a sustainable lifestyle.",
-        // CORRECTED PATH: "week 15/filename"
         photos: [
-            "week 15/IMG_20260501_090001.jpg", 
             "week 15/IMG_20260501_090013.jpg", 
             "week 15/IMG_20260501_090155.jpg", 
             "week 15/cce4bedc-5509-4596-9b79-ed1d2edcb0b1.jpg"
@@ -632,12 +690,6 @@ weeks.forEach((w, i) => {
     let photosHTML = w.photos.map(photo =>
     `<img src="${photo}" alt="Week ${w.week} documentation" loading="lazy" onerror="this.onerror=null; this.src='https://picsum.photos/seed/${w.week}/200/300.jpg'; this.alt='Image not found in ${photo}';">`
     ).join('');
-    /* 
-       NOTE: I added an "onerror" handler above. 
-       If the image file name in your folder is slightly different than what is in the code 
-       (e.g., different capitalization or missing .JPG vs .jpg), 
-       it will show a placeholder instead of a broken icon.
-    */
 
     let extrasHTML = '';
     if (w.reflection) {
@@ -768,6 +820,50 @@ function createParticle() {
 }
 
 for (let i = 0; i < 30; i++) createParticle();
+
+// ──────────────────────────────────────────
+//  IMAGE MODAL LOGIC (LIGHTBOX)
+// ──────────────────────────────────────────
+const modal = document.getElementById("imgModal");
+const modalImg = document.getElementById("modalImg");
+const captionText = document.getElementById("caption");
+const closeModal = document.querySelector(".close-modal");
+
+// Attach click event to all images in the grid
+document.querySelectorAll('.photo-grid img').forEach(img => {
+    img.addEventListener('click', function() {
+        modal.classList.add('show');
+        modalImg.src = this.src;
+        
+        // Get the week number from the alt text for a caption
+        // Alt text format: "Week X documentation"
+        captionText.innerHTML = this.alt.replace(" documentation", "");
+        document.body.style.overflow = "hidden"; // Stop background scrolling
+    });
+});
+
+// Close functions
+function hideModal() {
+    modal.classList.remove('show');
+    document.body.style.overflow = "auto"; // Restore scrolling
+}
+
+// Click the X
+closeModal.addEventListener('click', hideModal);
+
+// Click the background
+modal.addEventListener('click', function(e) {
+    if (e.target === modal) {
+        hideModal();
+    }
+});
+
+// Press Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === "Escape" && modal.classList.contains('show')) {
+        hideModal();
+    }
+});
 </script>
 </body>
 </html>
